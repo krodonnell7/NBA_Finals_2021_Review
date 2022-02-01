@@ -1,0 +1,39 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(readxl)
+```
+
+```{r}
+suns_lineups <- suns_lineups %>%
+  mutate(saric = ifelse(str_detect(LINEUPS, "Saric"), T, F))
+
+suns_lineups %>% 
+  group_by(saric) %>%
+  summarise(mean_ortg = mean(OFFRTG), mean_drtg = mean(DEFRTG), mean_netrtg = mean_ortg-mean_drtg, tot_mins = sum(MIN), mean_orb_pct = mean(`OREB%`), mean_drb_pct = mean(`DREB%`))
+```
+
+```{r}
+bucks_lineups <- bucks_lineups %>%
+  mutate(dante = ifelse(str_detect(LINEUPS, "DiVincenzo"), T, F))
+
+bucks_lineups %>% 
+  group_by(dante) %>%
+  summarise(mean_ortg = mean(OFFRTG), mean_drtg = mean(DEFRTG), mean_netrtg = mean_ortg-mean_drtg, tot_mins = sum(MIN), mean_orb_pct = mean(`OREB%`), mean_drb_pct = mean(`DREB%`))
+```
+
+
+#probability that Giannis makes 17 or more FT on 19 attempts
+```{r}
+giannis_ft_pct = .717
+binomical_dist <- function(p, x, n) {
+  return(choose(n,x)*p^x*(1-p)^(n-x))
+}
+
+binomical_dist(giannis_ft_pct, 17, 19) + binomical_dist(giannis_ft_pct, 18, 19) + binomical_dist(giannis_ft_pct, 19, 19)
+```
+
